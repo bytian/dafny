@@ -6,6 +6,7 @@
 *.vsix
 *.vsixmanifest
 *~
+*.swp
 
 Binaries/*.dll
 Binaries/*.mdb
