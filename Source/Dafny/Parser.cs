@@ -896,41 +896,49 @@ int StringToInt(string s, int defaultValue, string errString) {
 		}
 		switch (la.kind) {
 		case 54: case 55: case 92: {
+            Console.WriteLine("SubModuleDecl FFF");
 			SubModuleDecl(dmod, module, out submodule);
 			module.TopLevelDecls.Add(submodule); 
 			break;
 		}
 		case 56: {
+            Console.WriteLine("ClassDecl FFF");
 			ClassDecl(dmod, module, out c);
 			module.TopLevelDecls.Add(c); 
 			break;
 		}
 		case 58: case 59: {
+                              Console.WriteLine("DatatypeDecl FFF");
 			DatatypeDecl(dmod, module, out dt);
 			module.TopLevelDecls.Add(dt); 
 			break;
 		}
 		case 62: {
+                     Console.WriteLine("NewtypeDecl FFF");
 			NewtypeDecl(dmod, module, out td);
 			module.TopLevelDecls.Add(td); 
 			break;
 		}
 		case 63: {
+                     Console.WriteLine("OtherTypeDecl FFF");
 			OtherTypeDecl(dmod, module, out td);
 			module.TopLevelDecls.Add(td); 
 			break;
 		}
 		case 64: {
+                     Console.WriteLine("IteratorDecl FFF");
 			IteratorDecl(dmod, module, out iter);
 			module.TopLevelDecls.Add(iter); 
 			break;
 		}
 		case 57: {
+                     Console.WriteLine("TraitDecl FFF");
 			TraitDecl(dmod, module, out trait);
 			module.TopLevelDecls.Add(trait); 
 			break;
 		}
 		case 46: case 47: case 48: case 49: case 50: case 51: case 60: case 61: case 65: case 66: case 67: case 105: {
+                                                                                                                         Console.WriteLine("ClassMemberDecl FFF");
 			ClassMemberDecl(dmod, membersDefaultClass, false, !DafnyOptions.O.AllowGlobals, 
 !isTopLevel && DafnyOptions.O.IronDafny && isAbstract);
 			break;
@@ -1412,6 +1420,7 @@ int StringToInt(string s, int defaultValue, string errString) {
 		Function/*!*/ f;
 		
 		if (la.kind == 60) {
+            Console.WriteLine("1 FFF");
 			if (moduleLevelDecl) {
 			 SemErr(la, "fields are not allowed to be declared at the module level; instead, wrap the field in a 'class' declaration");
 			 dmod.IsStatic = false;
@@ -1419,8 +1428,10 @@ int StringToInt(string s, int defaultValue, string errString) {
 			
 			FieldDecl(dmod, mm);
 		} else if (la.kind == 61) {
+            Console.WriteLine("2 FFF");
 			ConstantFieldDecl(dmod, mm, moduleLevelDecl);
 		} else if (IsFunctionDecl()) {
+            Console.WriteLine("3 FFF");
 			if (moduleLevelDecl && dmod.StaticToken != null) {
 			 errors.Warning(dmod.StaticToken, "module-level functions are always non-instance, so the 'static' keyword is not allowed here");
 			 dmod.IsStatic = false;
@@ -1429,6 +1440,7 @@ int StringToInt(string s, int defaultValue, string errString) {
 			FunctionDecl(dmod, isWithinAbstractModule, out f);
 			mm.Add(f); 
 		} else if (StartOf(8)) {
+            Console.WriteLine("4 FFF");
 			if (moduleLevelDecl && dmod.StaticToken != null) {
 			 errors.Warning(dmod.StaticToken, "module-level methods are always non-instance, so the 'static' keyword is not allowed here");
 			 dmod.IsStatic = false;
@@ -1436,7 +1448,10 @@ int StringToInt(string s, int defaultValue, string errString) {
 			
 			MethodDecl(dmod, allowConstructors, isWithinAbstractModule, out m);
 			mm.Add(m); 
-		} else SynErr(174);
+		} else {
+            Console.WriteLine("??? FFF");
+            SynErr(174);
+        }
 	}
 
 	void Attribute(ref Attributes attrs) {
@@ -1625,6 +1640,7 @@ int StringToInt(string s, int defaultValue, string errString) {
 	}
 
 	void FieldDecl(DeclModifierData dmod, List<MemberDecl/*!*/>/*!*/ mm) {
+        Console.WriteLine("FieldDecl FFF");
 		Contract.Requires(cce.NonNullElements(mm));
 		Attributes attrs = null;
 		IToken/*!*/ id;  Type/*!*/ ty;
@@ -1646,6 +1662,7 @@ int StringToInt(string s, int defaultValue, string errString) {
 	}
 
 	void ConstantFieldDecl(DeclModifierData dmod, List<MemberDecl/*!*/>/*!*/ mm, bool moduleLevelDecl) {
+        Console.WriteLine("ConstantFieldDecl FFF");
 		Contract.Requires(cce.NonNullElements(mm));
 		Attributes attrs = null;
 		IToken/*!*/ id;  Type/*!*/ ty;
@@ -1676,6 +1693,7 @@ int StringToInt(string s, int defaultValue, string errString) {
 	}
 
 	void FunctionDecl(DeclModifierData dmod, bool isWithinAbstractModule, out Function/*!*/ f) {
+        Console.WriteLine("Function FFF");
 		Contract.Ensures(Contract.ValueAtReturn(out f)!=null);
 		Attributes attrs = null;
 		IToken/*!*/ id = Token.NoToken;  // to please compiler
@@ -1888,6 +1906,7 @@ int StringToInt(string s, int defaultValue, string errString) {
 	}
 
 	void MethodDecl(DeclModifierData dmod, bool allowConstructor, bool isWithinAbstractModule, out Method/*!*/ m) {
+        Console.WriteLine("Method FFF");
 		Contract.Ensures(Contract.ValueAtReturn(out m) !=null);
 		IToken/*!*/ id = Token.NoToken;
 		bool hasName = false;  IToken keywordToken;
@@ -2051,6 +2070,8 @@ int StringToInt(string s, int defaultValue, string errString) {
 		}
 		m.BodyStartTok = bodyStart;
 		m.BodyEndTok = bodyEnd;
+
+        Performance.printMethodBody(body);
 		
 	}
 
@@ -2648,6 +2669,7 @@ ref Attributes readsAttrs, ref Attributes modAttrs, ref Attributes decrAttrs) {
 
 	void MethodSpec(List<MaybeFreeExpression> req, List<FrameExpression> mod, List<MaybeFreeExpression> ens,
 List<Expression> decreases, ref Attributes decAttrs, ref Attributes modAttrs, string caption, bool performThisDeprecatedCheck) {
+        Console.WriteLine("MethodSpec FFF");
 		Contract.Requires(cce.NonNullElements(req));
 		Contract.Requires(cce.NonNullElements(mod));
 		Contract.Requires(cce.NonNullElements(ens));

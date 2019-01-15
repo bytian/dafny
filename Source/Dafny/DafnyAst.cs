@@ -5734,6 +5734,7 @@ namespace Microsoft.Dafny {
       this.methodBody = body;
       this.SignatureEllipsis = signatureEllipsis;
       MustReverify = false;
+      Performance.modifyMethodBody(methodBody);
     }
 
     bool ICodeContext.IsGhost { get { return this.IsGhost; } }
@@ -6936,7 +6937,7 @@ namespace Microsoft.Dafny {
   }
 
   public class BlockStmt : Statement {
-    public readonly List<Statement> Body;
+    public List<Statement> Body; // previously ==> public readonly List<Statement> Body;
     public BlockStmt(IToken tok, IToken endTok, [Captured] List<Statement> body)
       : base(tok, endTok) {
       Contract.Requires(tok != null);
